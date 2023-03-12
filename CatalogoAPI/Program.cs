@@ -1,4 +1,7 @@
 
+using CatalogoAPI.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace CatalogoAPI
 {
     public class Program
@@ -13,6 +16,10 @@ namespace CatalogoAPI
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddDbContext<AppDbContext>(options =>
+            options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found."),
+            builder => builder.MigrationsAssembly("CatalogoAPI")));
 
             var app = builder.Build();
 
