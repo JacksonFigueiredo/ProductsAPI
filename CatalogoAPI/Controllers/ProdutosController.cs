@@ -2,6 +2,7 @@
 using CatalogoAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Asn1.Mozilla;
 
 namespace CatalogoAPI.Controllers
 {
@@ -61,6 +62,21 @@ namespace CatalogoAPI.Controllers
             _context.Entry(produto).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
             _context.SaveChanges();
 
+            return Ok(produto);
+        }
+
+        [HttpDelete("{id:int")]
+        public ActionResult Delete(int id)
+        {
+            var produto = _context.Produtos.FirstOrDefault(_context => _context.ProdutoId == id);
+
+            if (produto == null)
+            {
+                return NotFound("Não encontrado");
+            }
+
+            _context.Produtos.Remove(produto);
+            _context.SaveChanges();
             return Ok(produto);
         }
     }
