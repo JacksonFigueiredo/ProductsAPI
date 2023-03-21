@@ -11,6 +11,14 @@ namespace CatalogoAPI.Data
         }
         public DbSet<Categoria> Categorias { get; set; }
         public DbSet<Produto> Produtos { get; set; }
+
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Categoria>().HasKey(c => c.CategoriaId);
+
+            modelBuilder.Entity<Produto>().HasOne<Categoria>(c => c.Categoria).WithMany(c => c.Produtos).HasForeignKey(c => c.CategoriaId);
+        }
     }
 }
 
