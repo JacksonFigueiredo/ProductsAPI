@@ -1,6 +1,7 @@
 
 using CatalogoAPI.Data;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 namespace CatalogoAPI
 {
@@ -20,6 +21,13 @@ namespace CatalogoAPI
             builder.Services.AddDbContext<AppDbContext>(options =>
             options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found."),
             builder => builder.MigrationsAssembly("CatalogoAPI")));
+
+
+            builder.Services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+
+            });
 
             var app = builder.Build();
 

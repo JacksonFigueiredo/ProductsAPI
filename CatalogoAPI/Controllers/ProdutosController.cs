@@ -65,7 +65,7 @@ namespace CatalogoAPI.Controllers
             return Ok(produto);
         }
 
-        [HttpDelete("{id:int")]
+        [HttpDelete("{id:int}")]
         public ActionResult Delete(int id)
         {
             var produto = _context.Produtos.FirstOrDefault(_context => _context.ProdutoId == id);

@@ -2,10 +2,11 @@
 using CatalogoAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CatalogoAPI.Controllers
 {
-    [Route("controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class CategoriasController : ControllerBase
     {
@@ -14,6 +15,14 @@ namespace CatalogoAPI.Controllers
         {
             _context = context;
         }
+
+        [HttpGet("produtos")]
+        public ActionResult<IEnumerable<Categoria>> GetCategoriasProdutos()
+        {
+            return _context.Categorias.Include(p => p.Produtos).ToList();
+        }
+
+
 
         [HttpGet]
         public ActionResult<IEnumerable<Categoria>> Get()
@@ -64,7 +73,7 @@ namespace CatalogoAPI.Controllers
             return Ok(categoria);
         }
 
-        [HttpDelete("{id:int")]
+        [HttpDelete("{id:int}")]
         public ActionResult Delete(int id)
         {
             var categoria = _context.Categorias.FirstOrDefault(_context => _context.CategoriaId == id);
