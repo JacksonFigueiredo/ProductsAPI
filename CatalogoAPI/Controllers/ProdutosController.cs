@@ -2,6 +2,7 @@
 using CatalogoAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Asn1.Mozilla;
 
 namespace CatalogoAPI.Controllers
@@ -19,7 +20,7 @@ namespace CatalogoAPI.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Produto>> Get()
         {
-            var produtos = _context.Produtos.ToList();
+            var produtos = _context.Produtos.AsNoTracking().ToList();
             if (produtos == null)
             {
                 return NotFound();
@@ -30,7 +31,7 @@ namespace CatalogoAPI.Controllers
         [HttpGet("{id:int}", Name = "ObterProduto")]
         public ActionResult<Produto> Get(int id)
         {
-            var produto = _context.Produtos.FirstOrDefault(x => x.ProdutoId == id);
+            var produto = _context.Produtos.AsNoTracking().FirstOrDefault(x => x.ProdutoId == id);
             if (produto == null)
             {
                 return NotFound("Não Encontrado");
