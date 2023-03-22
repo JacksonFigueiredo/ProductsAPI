@@ -36,7 +36,7 @@ namespace CatalogoAPI.Controllers
             {
                 return NotFound("Não Encontrado");
             }
-            return produto;
+            return Ok(produto);
         }
 
         [HttpPost]
