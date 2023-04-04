@@ -18,18 +18,18 @@ namespace CatalogoAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Produto>> Get()
+        public IActionResult Get()
         {
             var produtos = _context.Produtos.AsNoTracking().ToList();
             if (produtos == null)
             {
                 return NotFound();
             }
-            return produtos;
+            return Ok(produtos);
         }
 
         [HttpGet("{id:int}", Name = "ObterProduto")]
-        public ActionResult<Produto> Get(int id)
+        public ActionResult<Produto> Get(int id) //Mais Indicado
         {
             var produto = _context.Produtos.AsNoTracking().FirstOrDefault(x => x.ProdutoId == id);
             if (produto == null)
