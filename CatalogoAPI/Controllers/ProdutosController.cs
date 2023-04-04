@@ -18,9 +18,9 @@ namespace CatalogoAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            var produtos = _context.Produtos.AsNoTracking().ToList();
+            var produtos = await _context.Produtos.AsNoTracking().ToListAsync();
             if (produtos == null)
             {
                 return NotFound();
@@ -29,9 +29,9 @@ namespace CatalogoAPI.Controllers
         }
 
         [HttpGet("{id:int}", Name = "ObterProduto")]
-        public ActionResult<Produto> Get(int id) //Mais Indicado
+        public async Task<ActionResult<Produto>> Get(int id) //Mais Indicado
         {
-            var produto = _context.Produtos.AsNoTracking().FirstOrDefault(x => x.ProdutoId == id);
+            var produto = await _context.Produtos.AsNoTracking().FirstOrDefaultAsync(x => x.ProdutoId == id);
             if (produto == null)
             {
                 return NotFound("Não Encontrado");
@@ -40,20 +40,20 @@ namespace CatalogoAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult Post([FromBody] Produto produto)
+        public async Task<ActionResult> Post([FromBody] Produto produto)
         {
             if (produto == null)
                 BadRequest();
 
-            _context.Produtos.Add(produto);
-            _context.SaveChanges();
+            await _context.Produtos.AddAsync(produto);
+            await _context.SaveChangesAsync();
 
             return new CreatedAtRouteResult("ObterProduto", new { id = produto.ProdutoId }, produto);
         }
 
 
         [HttpPut("{id:int}")]
-        public ActionResult Update(int id, [FromBody] Produto produto)
+        public async Task<ActionResult> Update(int id, [FromBody] Produto produto)
         {
             if (id != produto.ProdutoId)
             {
@@ -61,13 +61,13 @@ namespace CatalogoAPI.Controllers
             }
 
             _context.Entry(produto).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return Ok(produto);
         }
 
         [HttpDelete("{id:int}")]
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
             var produto = _context.Produtos.FirstOrDefault(_context => _context.ProdutoId == id);
 
@@ -77,7 +77,7 @@ namespace CatalogoAPI.Controllers
             }
 
             _context.Produtos.Remove(produto);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return Ok(produto);
         }
     }
