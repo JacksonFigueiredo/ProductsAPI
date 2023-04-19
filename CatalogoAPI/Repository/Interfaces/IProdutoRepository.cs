@@ -1,6 +1,9 @@
-﻿namespace CatalogoAPI.Repository.Interfaces
+﻿using CatalogoAPI.Models;
+
+namespace CatalogoAPI.Repository.Interfaces
 {
-    public interface IProdutoRepository
+    public interface IProdutoRepository : IRepository<Produto>
     {
+        IEnumerable<Produto> GetProdutosPorPreco();
     }
 }
