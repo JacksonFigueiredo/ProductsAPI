@@ -30,7 +30,7 @@ namespace CatalogoAPI.Controllers
         }
 
         [HttpGet("{id:int}", Name = "ObterProduto")]
-        public ActionResult<Produto> Get(int id) //Mais Indicado
+        public ActionResult<Produto> Get(int id)
         {
             var produto = _context.ProdutoRepository.GetById(x => x.ProdutoId == id);
             if (produto == null)

@@ -1,6 +1,7 @@
 ﻿using CatalogoAPI.Data;
 using CatalogoAPI.Models;
 using CatalogoAPI.Repository.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace CatalogoAPI.Repository.Implementations
@@ -11,9 +12,9 @@ namespace CatalogoAPI.Repository.Implementations
         {
         }
 
-        public IEnumerable<Categoria> GetCategoriasProdutos()
+        public ActionResult<IEnumerable<Categoria>> GetCategoriasProdutos()
         {
-            return Get().Include(x => x.Produtos);
+            return Get().Include(x => x.Produtos).ToList();
         }
     }
 }

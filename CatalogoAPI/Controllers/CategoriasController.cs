@@ -1,5 +1,6 @@
 ﻿using CatalogoAPI.Data;
 using CatalogoAPI.Models;
+using CatalogoAPI.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,8 +12,8 @@ namespace CatalogoAPI.Controllers
     [ApiController]
     public class CategoriasController : ControllerBase
     {
-        private readonly AppDbContext _context;
-        public CategoriasController(AppDbContext context)
+        private readonly IUnitOfWork _context;
+        public CategoriasController(IUnitOfWork context)
         {
             _context = context;
         }
@@ -20,15 +21,13 @@ namespace CatalogoAPI.Controllers
         [HttpGet("produtos")]
         public ActionResult<IEnumerable<Categoria>> GetCategoriasProdutos()
         {
-            return _context.Categorias.Include(p => p.Produtos).AsNoTracking().ToList();
+            return _context.CategoriaRepository.GetCategoriasProdutos();
         }
-
-
 
         [HttpGet]
         public ActionResult<IEnumerable<Categoria>> Get()
         {
-            var categorias = _context.Categorias.AsNoTracking().ToList();
+            var categorias = _context.CategoriaRepository.Get().ToList();
             if (categorias == null)
             {
                 return NotFound();
@@ -39,7 +38,7 @@ namespace CatalogoAPI.Controllers
         [HttpGet("{id:int}", Name = "ObterCategoria")]
         public ActionResult<Categoria> Get(int id)
         {
-            object? categoria = _context.Categorias.AsNoTracking().FirstOrDefault(x => x.CategoriaId == id);
+            object? categoria = _context.CategoriaRepository.GetById(o => o.CategoriaId == id);
             if (categoria == null)
             {
                 return NotFound("Não Encontrado");
@@ -53,8 +52,8 @@ namespace CatalogoAPI.Controllers
             if (categoria == null)
                 BadRequest();
 
-            _context.Categorias.Add(categoria);
-            _context.SaveChanges();
+            _context.CategoriaRepository.Add(categoria);
+            _context.Commit();
 
             return new CreatedAtRouteResult("ObterCategoria", new { id = categoria.CategoriaId }, categoria);
         }
@@ -68,8 +67,8 @@ namespace CatalogoAPI.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(categoria).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-            _context.SaveChanges();
+           _context.CategoriaRepository.Update(categoria);
+            _context.Commit();
 
             return Ok(categoria);
         }
@@ -77,15 +76,15 @@ namespace CatalogoAPI.Controllers
         [HttpDelete("{id:int}")]
         public ActionResult Delete(int id)
         {
-            var categoria = _context.Categorias.FirstOrDefault(_context => _context.CategoriaId == id);
+            var categoria = _context.CategoriaRepository.GetById(_context => _context.CategoriaId == id);
 
             if (categoria == null)
             {
                 return NotFound("Não encontrado");
             }
 
-            _context.Categorias.Remove(categoria);
-            _context.SaveChanges();
+            _context.CategoriaRepository.Delete(categoria);
+            _context.Commit();
             return Ok(categoria);
         }
     }
