@@ -1,6 +1,6 @@
 ﻿namespace CatalogoAPI.Repository.Interfaces
 {
-    public interface IUnitofWork
+    public interface IUnitOfWork
     {
         IProdutoRepository ProdutoRepository { get; }
         ICategoriaRepository CategoriaRepository { get; }

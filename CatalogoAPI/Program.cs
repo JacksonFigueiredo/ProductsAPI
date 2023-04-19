@@ -1,5 +1,7 @@
 
 using CatalogoAPI.Data;
+using CatalogoAPI.Repository.Implementations;
+using CatalogoAPI.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
@@ -28,6 +30,8 @@ namespace CatalogoAPI
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 
             });
+
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             var app = builder.Build();
 

@@ -3,7 +3,7 @@ using CatalogoAPI.Repository.Interfaces;
 
 namespace CatalogoAPI.Repository.Implementations
 {
-    public class UnitOfWork : IUnitofWork
+    public class UnitOfWork : IUnitOfWork
     {
         private ProdutoRepository _produtoRepo;
         private CategoriaRepository _categoriaRepo;
