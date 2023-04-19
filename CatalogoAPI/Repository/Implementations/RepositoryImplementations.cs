@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CatalogoAPI.Repository.Implementations
 {
-    public class RepositoryImplementations<T> : IRepository<T> where T : class
+    public class RepositoryImplementation<T> : IRepository<T> where T : class
     {
         protected AppDbContext _dbContext;
 
-        public RepositoryImplementations(AppDbContext context)
+        public RepositoryImplementation(AppDbContext context)
         {
             _dbContext = context;
         }
