@@ -3,6 +3,7 @@ using CatalogoAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace CatalogoAPI.Controllers
 {
@@ -27,12 +28,12 @@ namespace CatalogoAPI.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Categoria>> Get()
         {
-            object categorias = _context.Categorias.AsNoTracking().ToList();
+            var categorias = _context.Categorias.AsNoTracking().ToList();
             if (categorias == null)
             {
                 return NotFound();
             }
-            return (ActionResult<IEnumerable<Categoria>>)categorias;
+            return categorias;
         }
 
         [HttpGet("{id:int}", Name = "ObterCategoria")]
