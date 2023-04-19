@@ -1,5 +1,6 @@
 ﻿using CatalogoAPI.Data;
 using CatalogoAPI.Models;
+using CatalogoAPI.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,16 +12,16 @@ namespace CatalogoAPI.Controllers
     [ApiController]
     public class ProdutosController : ControllerBase
     {
-        private readonly AppDbContext _context;
-        public ProdutosController(AppDbContext context)
+        private readonly IUnitOfWork _context;
+        public ProdutosController(IUnitOfWork context)
         {
             _context = context;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public ActionResult<IEnumerable<Produto>> Get()
         {
-            var produtos = await _context.Produtos.AsNoTracking().ToListAsync();
+            var produtos = _context.ProdutoRepository.Get().ToList();
             if (produtos == null)
             {
                 return NotFound();
@@ -29,9 +30,9 @@ namespace CatalogoAPI.Controllers
         }
 
         [HttpGet("{id:int}", Name = "ObterProduto")]
-        public async Task<ActionResult<Produto>> Get(int id) //Mais Indicado
+        public ActionResult<Produto> Get(int id) //Mais Indicado
         {
-            var produto = await _context.Produtos.AsNoTracking().FirstOrDefaultAsync(x => x.ProdutoId == id);
+            var produto = _context.ProdutoRepository.GetById(x => x.ProdutoId == id);
             if (produto == null)
             {
                 return NotFound("Não Encontrado");
@@ -40,13 +41,13 @@ namespace CatalogoAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] Produto produto)
+        public ActionResult Post([FromBody] Produto produto)
         {
             if (produto == null)
                 BadRequest();
 
-            await _context.Produtos.AddAsync(produto);
-            await _context.SaveChangesAsync();
+            _context.ProdutoRepository.Add(produto);
+            _context.Commit();
 
             return new CreatedAtRouteResult("ObterProduto", new { id = produto.ProdutoId }, produto);
         }
@@ -60,8 +61,8 @@ namespace CatalogoAPI.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(produto).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-            await _context.SaveChangesAsync();
+            _context.ProdutoRepository.Update(produto);
+            _context.Commit();
 
             return Ok(produto);
         }
@@ -69,15 +70,15 @@ namespace CatalogoAPI.Controllers
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var produto = _context.Produtos.FirstOrDefault(_context => _context.ProdutoId == id);
+            var produto = _context.ProdutoRepository.GetById(_context => _context.ProdutoId == id);
 
             if (produto == null)
             {
                 return NotFound("Não encontrado");
             }
 
-            _context.Produtos.Remove(produto);
-            await _context.SaveChangesAsync();
+            _context.ProdutoRepository.Delete(produto);
+            _context.Commit();
             return Ok(produto);
         }
     }
