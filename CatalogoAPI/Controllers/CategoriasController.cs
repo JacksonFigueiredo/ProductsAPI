@@ -1,4 +1,6 @@
-﻿using CatalogoAPI.Data;
+﻿using AutoMapper;
+using CatalogoAPI.Data;
+using CatalogoAPI.DTOs;
 using CatalogoAPI.Models;
 using CatalogoAPI.Repository.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -13,15 +15,17 @@ namespace CatalogoAPI.Controllers
     public class CategoriasController : ControllerBase
     {
         private readonly IUnitOfWork _context;
-        public CategoriasController(IUnitOfWork context)
+        private readonly IMapper _mapper;
+        public CategoriasController(IUnitOfWork context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpGet("produtos")]
-        public ActionResult<IEnumerable<Categoria>> GetCategoriasProdutos()
+        public ActionResult<IEnumerable<CategoriaDTO>> GetCategoriasProdutos()
         {
-            return _context.CategoriaRepository.GetCategoriasProdutos();
+            return _mapper.Map<List<CategoriaDTO>>(_context.CategoriaRepository.GetCategoriasProdutos());
         }
 
         [HttpGet]
@@ -36,14 +40,14 @@ namespace CatalogoAPI.Controllers
         }
 
         [HttpGet("{id:int}", Name = "ObterCategoria")]
-        public ActionResult<Categoria> Get(int id)
+        public ActionResult<CategoriaDTO> Get(int id)
         {
-            object? categoria = _context.CategoriaRepository.GetById(o => o.CategoriaId == id);
+            object? categoria = _mapper.Map<List<CategoriaDTO>>(_context.CategoriaRepository.GetById(o => o.CategoriaId == id));
             if (categoria == null)
             {
                 return NotFound("Não Encontrado");
             }
-            return (ActionResult<Categoria>)Ok(categoria);
+            return (ActionResult<CategoriaDTO>)Ok(categoria);
         }
 
         [HttpPost]

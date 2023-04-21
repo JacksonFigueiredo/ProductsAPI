@@ -1,5 +1,7 @@
 
+using AutoMapper;
 using CatalogoAPI.Data;
+using CatalogoAPI.DTOs.Mappings;
 using CatalogoAPI.Repository.Implementations;
 using CatalogoAPI.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -30,6 +32,16 @@ namespace CatalogoAPI
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 
             });
+
+            var mappingConfig = new MapperConfiguration(m =>
+            {
+                m.AddProfile(new MappingProfile());
+            });
+
+            IMapper mapper = mappingConfig.CreateMapper();
+
+            builder.Services.AddSingleton(mapper);
+
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
