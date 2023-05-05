@@ -12,7 +12,7 @@ namespace CatalogoAPI.Repository.Implementations
         {
         }
 
-        public ActionResult<IEnumerable<Categoria>> GetCategoriasProdutos()
+        public IEnumerable<Categoria> GetCategoriasProdutos()
         {
             return Get().Include(x => x.Produtos).ToList();
         }
