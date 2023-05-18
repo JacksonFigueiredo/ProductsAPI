@@ -67,11 +67,11 @@ namespace CatalogoAPI.Controllers
 
 
         [HttpPut("{id:int}")]
-        public ActionResult Update(int id, [FromBody] CategoriaDTO categoriaDto)
+        public ActionResult Update(int? id, [FromBody] CategoriaDTO categoriaDto)
         {
-            if (id != categoriaDto.CategoriaId)
+            if (id == _context.CategoriaRepository.GetById(_context => _context.CategoriaId == id).CategoriaId)
             {
-                return BadRequest();
+                return BadRequest("Probléme");
             }
 
             var categoria = _mapper.Map<Categoria>(categoriaDto);
